@@ -1,0 +1,23 @@
+name: Security CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  dockerfile-lint:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: inventory-api/Dockerfile
+  security-scan:
+    uses: xiao199963-creator/gh-sharedrepo/.github/workflows/security-scan.yml@main
+    with:
+      severity: "CRITICAL,HIGH"
