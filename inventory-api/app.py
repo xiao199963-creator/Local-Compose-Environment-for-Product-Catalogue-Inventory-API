@@ -46,4 +46,6 @@ def get_inventory(product_id):
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    app.run(host="0.0.0.0", port=5000)
+    # B104 is accepted because the API must bind to all interfaces for Docker port exposure.
+    app.run(host="0.0.0.0", port=5000)  # nosec B104
+    

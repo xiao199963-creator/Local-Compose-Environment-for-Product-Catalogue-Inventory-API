@@ -1,0 +1,42 @@
+name: Security CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  dockerfile-lint:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: inventory-api/Dockerfile
+  security-scan:
+    uses: xiao199963-creator/gh-sharedrepo/.github/workflows/security-scan.yml@main
+    with:
+      severity: "CRITICAL,HIGH"
+  python-sast:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Bandit
+        run: python -m pip install bandit
+
+      - name: Run Bandit
+        working-directory: inventory-api
+        run: bandit -r . -ll
+        
